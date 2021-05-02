@@ -27,11 +27,9 @@ mysql.config({
 
 const mysqlHandler = async (event) => {
   let results = await mysql.query("SELECT * FROM slsdb.CUSTOMERS");
-  console.log(results);
-  console.log(results);
   await mysql.end();
   return formatJSONResponse({
-    message: `Hello ${results.name}!`,
+    message: `Hello ${results[0].NAME}!`,
   });
 };
 

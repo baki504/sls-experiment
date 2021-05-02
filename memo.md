@@ -9,6 +9,12 @@ npm install serverless-offline --save-dev
 npm i serverless-mysql
 npm i -D serverless-dotenv-plugin
 
+# jest plugin
+# this support cli function creation
+# notice: not support typescript
+npm install --save-dev serverless-jest-plugin
+
+
 # serverless.ts
 ## region
 ## offline plugins
