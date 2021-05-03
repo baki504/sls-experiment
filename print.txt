@@ -1,0 +1,78 @@
+Serverless: Deprecation warning: Detected ".env" files. In the next major release variables from ".env" files will be automatically loaded into the serverless build process. Set "useDotenv: true" to adopt that behavior now.
+            More Info: https://www.serverless.com/framework/docs/deprecations/#LOAD_VARIABLES_FROM_ENV_FILES
+Serverless: Running "serverless" installed locally (in service node_modules)
+Serverless: Deprecation warning: Detected ".env" files. In the next major release variables from ".env" files will be automatically loaded into the serverless build process. Set "useDotenv: true" to adopt that behavior now.
+            More Info: https://www.serverless.com/framework/docs/deprecations/#LOAD_VARIABLES_FROM_ENV_FILES
+Serverless: Deprecation warning: CLI options definitions were upgraded with "type" property (which could be one of "string", "boolean", "multiple"). Below listed plugins do not predefine type for introduced options:
+             - ServerlessS3Local for "port", "directory", "buckets", "cors", "noStart", "allowMismatchedSignatures", "website", "serviceEndpoint", "httpsProtocol", "vhostBuckets"
+            Please report this issue in plugin issue tracker.
+            Starting with next major release, this will be communicated with a thrown error.
+            More Info: https://www.serverless.com/framework/docs/deprecations/#CLI_OPTIONS_SCHEMA
+Serverless: Deprecation warning: Starting with version 3.0.0, following property will be replaced:
+              "provider.iamRoleStatements" -> "provider.iam.role.statements"
+            More Info: https://www.serverless.com/framework/docs/deprecations/#PROVIDER_IAM_SETTINGS
+Serverless: Deprecation warning: Starting with next major version, "http.request.schema" property will be replaced by "http.request.schemas".
+            More Info: https://www.serverless.com/framework/docs/deprecations/#AWS_API_GATEWAY_SCHEMAS
+service:
+  name: sls-experiment
+frameworkVersion: '2'
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+  inputBucket: input-bucket-2
+plugins:
+  - serverless-webpack
+  - serverless-offline
+  - serverless-s3-local
+provider:
+  stage: dev
+  region: ap-northeast-1
+  name: aws
+  runtime: nodejs14.x
+  apiGateway:
+    minimumCompressionSize: 1024
+    shouldStartNameWithService: true
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
+  lambdaHashingVersion: '20201221'
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:GetObjectAcl
+      Resource: arn:aws:s3:::input-bucket-2/*
+  versionFunctions: true
+  variableSyntax: \${([^{}:]+?(?:\(|:)(?:[^:{}][^{}]*?)?)}
+functions:
+  hello:
+    handler: src/functions/hello/handler.main
+    events:
+      - http:
+          method: post
+          path: hello
+          request:
+            schema:
+              application/json:
+                type: object
+                properties:
+                  name:
+                    type: string
+                required:
+                  - name
+    name: sls-experiment-dev-hello
+  mysql:
+    handler: src/functions/mysql/handler.main
+    events:
+      - http:
+          method: get
+          path: mysql
+          request:
+            schema: {}
+    name: sls-experiment-dev-mysql
+  s3hook:
+    handler: src/functions/s3hook/handler.main
+    events:
+      - s3: input-bucket-2
+    name: sls-experiment-dev-s3hook
+

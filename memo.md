@@ -8,6 +8,12 @@ serverless create --template aws-nodejs-typescript --name sls-nodejs-typescript-
 npm install serverless-offline --save-dev
 npm i serverless-mysql
 npm i -D serverless-dotenv-plugin
+npm install serverless-s3-local --save-dev
+sls plugin install --name serverless-s3-local # ???
+aws --endpoint="http://localhost:8000" s3 cp data.txt s3://local-bucket/data.txt --profile s3local
+aws s3 cp data.txt s3://myBucket/data.txt
+npm install serverless-plugin-existing-s3
+npm i -D aws-sdk
 
 # jest plugin
 # this support cli function creation
@@ -18,7 +24,15 @@ npm install --save-dev serverless-jest-plugin
 # serverless.ts
 ## region
 ## offline plugins
+## s3-local plugins !! うまく動かない
+## serverless-plugin-existing-s3
 
+```
+
+## lambda : s3 = 1 : 1
+
+```
+An error occurred: S3BucketSlsinputbucket - Configurations overlap. Configurations on the same bucket cannot share a common event type. (Service: Amazon S3; Status Code: 400; Error Code: InvalidArgument; Request ID: FHW0WJ5Z28NJZBYG; S3 Extended Request ID: HODouw420l5FCLcOEFYL1EVpJXV3VYeD4vFwZ4zHE1mVwFvAKPHaCJpr2ZQHqGQs6KR1GSBAO8U=; Proxy: null).
 ```
 
 ## .gitignore
